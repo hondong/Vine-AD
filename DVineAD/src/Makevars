@@ -1,0 +1,8 @@
+## CPPFLAGS 
+CXXFLAGS= -g -O2 $(CPPFLAGS)
+
+## User defined libs
+PKG_LIBS= -L/home/hdong/lib -ladolc -Wl,-rpath=/home/hdong/lib
+
+## Pre-processor flags
+PKG_CPPFLAGS= -I/home/hdong/include

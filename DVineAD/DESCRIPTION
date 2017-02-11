@@ -1,0 +1,15 @@
+Package: DVineAD
+Type: Package
+Title: Maximum Likelihood Estimation of D-Vine copulas with automatic differentiation 
+Version: 0.1
+Date: 2017-01-28
+Author: Hongbo Dong, Wei Li and Haijun Li 
+Maintainer: Hongbo Dong <hongbo.dong@wsu.edu>
+Description: This package is written to demonstrate that by using automatic differentiation
+tools, gradients, as well as higher level derivatives, can be computed than current 
+computational practice. This package is associated to the submitted (code snippet)
+"Faster Estimation of High-Dimensional Vine Copulas with Automatic Differentiation" 
+submitted to the Journal of Statistical Software.
+License: GPL (>= 2)
+Imports: Rcpp (>= 0.12.9)
+LinkingTo: Rcpp

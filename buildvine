@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#### CompileAttributes
+cd DVineAD;
+R -e ' library("Rcpp"); compileAttributes(); '
+cd ..;
+
+#### Build VineCopula
+#R CMD build VineCopula9001
+R CMD build DVineAD 
+
+if [ $? -eq 0 ]
+then 
+    echo "R build successful!"
+else 
+    echo "R build failed!"
+fi
+
+
+#### Load VineCopula_2.1.2.9000.tar.gz
+#R CMD INSTALL VineCopula_2.1.2.9000.tar.gz
+
+#### Load VineCopula_2.1.2.9001.tar.gz
+#R CMD INSTALL VineCopula_2.1.2.9001.tar.gz
+R CMD INSTALL DVineAD_0.1.tar.gz
+if [ $? -eq 0 ]
+then 
+    echo "R INSTALL successful!"
+else 
+    echo "R INSTALL failed!"
+fi
