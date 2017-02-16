@@ -1,3 +1,4 @@
+
 The goal of this project to demonstrate that by using automatic differentiation
 tools, the maximum likelihood estimation of vine copula models can be done significantly 
 faster than the current practice. This package is associated to the submitted (as a code snippet)
@@ -5,3 +6,5 @@ article to the Journal of Statistical Software "Faster Estimation of High-Dimens
 Copulas with Automatic Differentiation" authored by Hongbo Dong, Wei Li and Haijun Li (Washington
 State University).
 
+If you have successfully installed the ADOL-C software, you will then be able to build/install our
+R package DVineAD with the bash script buildvine.
