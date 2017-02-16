@@ -1,9 +1,9 @@
 library("Rcpp"); 
-setwd("/home/hdong/workspace/compute/RVineAD/DVineAD")
+setwd("./DVineAD")
 
 compileAttributes(); 
 
-setwd("/home/hdong/workspace/compute/RVineAD")
+setwd("../")
 
 library("DVineAD")
 detach("package:DVineAD", unload = TRUE)

@@ -6,18 +6,20 @@ library("VineCopula")
 i=1
 res_tab1 <- list()
 for (d in c(10, 20, 30, 40, 50, 60)) {
-#for (d in c(10, 20, 30)) {
+#for (d in c(10, 20)) {
 #for (d in c(5)) {
     res_tab1$d[[i]] <- d
     TruncLevel <- 3 
     dd <- (2*d-TruncLevel-1)*(TruncLevel)/2
     order <- 1:d
     family <- c(rep(3,dd), rep(0, d*(d-1)/2 - dd)) 
-    #par <- c(runif(dd), rep(0, d*(d-1)/2 - dd))  
-    par <- c(3*runif(d-1), 2*runif(d-2), 1*runif(d-3), rep(0, d*(d-1)/2 - dd))  
+    #par <- c(1+runif(dd), rep(0, d*(d-1)/2 - dd))  
+    par <- c(3*runif(d-1), 2*runif(d-2), runif(d-3), rep(0, d*(d-1)/2 - dd))  
+    #par <- c(rep(3,d-1), rep(2,d-2), rep(1, d-3), rep(0, d*(d-1)/2 - dd))  
     parTL <- par[1:dd]  
 
-    startpar <- c((1+runif(dd))*par[1:dd], rep(0, d*(d-1)/2 - dd))
+    #startpar <- c((1+0*runif(dd))*par[1:dd], rep(0, d*(d-1)/2 - dd))
+    startpar <- c(runif(dd)*par[1:dd], rep(0, d*(d-1)/2 - dd))
     startparTL <- startpar[1:dd]
     
     RVM <- D2RVine(order, family, par)
@@ -100,7 +102,7 @@ for (d in c(10, 20, 30, 40, 50, 60)) {
 i=1
 res_tab2 <- list()
 for (d in c(10, 20, 30, 40, 50, 60)) {
-#for (d in c(10, 20, 30)) {
+#for (d in c(10, 20)) {
     res_tab2$d[[i]] <- d
     TruncLevel <- d-1 
     dd <- (2*d-TruncLevel-1)*(TruncLevel)/2

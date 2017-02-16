@@ -1,4 +1,34 @@
 #!/bin/bash
+echo -e "\n\n"
+echo -e "This script will generate DVineAD/src/Makevars file that tells the compiler         " 
+echo -e "where is ADOL-C installed. It will then build and install the DVineAD package."  
+echo -e "If you see message \"R INSTALL successful!\", you will then be able to replicate "
+echo -e "our numerical results reported in the paper with the following commands in R      " 
+echo -e "    source(\"./DVineAD/tests/DVineADexample.R\")                              "  
+echo -e "    source(\"./DVineAD/tests/CompareTime.R\")                                 "  
+echo -e "Note the second script will take some time to finish.                         "
+echo -e "\n\n"
+
+read -n 1 -s -p "Press any key to continue"
+echo ""
+
+echo -e "If you do not have ADOL-C installed, please quite this script and so do. (https://projects.coin-or.org/ADOL-C) " 
+echo "Otherwise please input the path that contains a folder ./adolc/ (which then contains adolc.h), it may look like \"/home/hdong/adolc_base/include\" \n"
+read ADOLC_INC
+echo "Please input the path that contains file libadolc.so , it may look like \"/home/hdong/adolc_base/lib64\" \n"
+read ADOLC_LIB
+
+echo "$ADOLC_INC"
+echo "$ADOLC_LIB"
+echo -E "## CPPFLAGS"                       > ./DVineAD/src/Makevars
+echo -E "PKG_CXXFLAGS= -g -O2 \$(CPPFLAGS)" >> ./DVineAD/src/Makevars
+echo -E ""                                  >> ./DVineAD/src/Makevars
+echo -E "## User defined libs"              >> ./DVineAD/src/Makevars
+echo -E "PKG_LIBS= -L"$ADOLC_LIB "-ladolc -Wl,-rpath="$ADOLC_LIB >> ./DVineAD/src/Makevars
+
+echo -E "## Pre-processor flags"            >> ./DVineAD/src/Makevars
+echo -E "PKG_CPPFLAGS= -I"$ADOLC_INC       >> ./DVineAD/src/Makevars
+
 
 #### CompileAttributes
 cd DVineAD;
@@ -6,26 +36,19 @@ R -e ' library("Rcpp"); compileAttributes(); '
 cd ..;
 
 #### Build VineCopula
-#R CMD build VineCopula9001
 R CMD build DVineAD 
 
 if [ $? -eq 0 ]
 then 
     echo "R build successful!"
+    R CMD INSTALL DVineAD_0.1.tar.gz
+    if [ $? -eq 0 ]
+    then 
+        echo "R INSTALL successful!"
+    else 
+        echo "R INSTALL failed!"
+    fi
 else 
     echo "R build failed!"
 fi
 
-
-#### Load VineCopula_2.1.2.9000.tar.gz
-#R CMD INSTALL VineCopula_2.1.2.9000.tar.gz
-
-#### Load VineCopula_2.1.2.9001.tar.gz
-#R CMD INSTALL VineCopula_2.1.2.9001.tar.gz
-R CMD INSTALL DVineAD_0.1.tar.gz
-if [ $? -eq 0 ]
-then 
-    echo "R INSTALL successful!"
-else 
-    echo "R INSTALL failed!"
-fi

@@ -1,7 +1,6 @@
 #include <adolc/adolc.h>
 #include <iostream>
 #include <cmath>
-#define CLAYTONCOPULA (3)
 #include <Rcpp.h>
 using namespace Rcpp;
 #define XEPS 1e-4
@@ -9,47 +8,38 @@ using namespace Rcpp;
 //////////////////////////////////////////////////////////////
 // Function to compute log-likelihood for bivariate copula
 // Input:
-// family    copula family (0=independent, 1=gaussian, 2=student, 3=clayton, 4=gumbel, 5=frank)
 // n         sample size
 // u         first variable of data set
 // v         second variable of data set
-// theta     dependency parameter
-// nu        degrees-of-freedom for students copula
-// loglik    output
+// theta     parameter for bivariate copula
 //////////////////////////////////////////////////////////////
-//void LL(int family, int n, NumericVector u, NumericVector v, double theta, double* loglik)
-//void LL(int n, double* u, double* v, double theta, double* loglik)
-adouble LL(int n, adouble* u, adouble* v, adouble theta)//, double* loglik)
+adouble LL(int n, adouble* u, adouble* v, adouble theta)
 {
     int j;
     adouble dat[2], ll=0.0, f, ff;
 
     //Compute log-likelihood:
-//    if(family==0) //independent
-//        ll = 0;
-//    else if(family==CLAYTONCOPULA) //Clayton
-//    {
-        f = 0.0;
-        for(j=0;j<n;j++)
-        {
-            dat[0] = u[j]; dat[1] = v[j];
-            //f=log1p(theta))-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
-            f+=log(1+theta)-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
-        }
-        condassign(ff, theta-1e-10, f, 0);
-        ll += ff;
+    f = 0.0;
+    for(j=0;j<n;j++)
+    {
+        dat[0] = u[j]; dat[1] = v[j];
+        //f=log1p(theta))-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
+        f+=log(1+theta)-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
+    }
+    condassign(ff, theta-1e-10, f, 0);
+    ll += ff;
 
-        //if(theta <= 1e-10) ll = 0;
-        //else
-        //{
-        //    for(j=0;j<n;j++)
-        //    {
-        //        dat[0] = u[j]; dat[1] = v[j];
-        //        //f=log1p(theta))-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
-        //        f=log(1+theta)-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
-        //        ll += f;
-        //    }
-        //}
+    //if(theta <= 1e-10) ll = 0;
+    //else
+    //{
+    //    for(j=0;j<n;j++)
+    //    {
+    //        dat[0] = u[j]; dat[1] = v[j];
+    //        //f=log1p(theta))-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
+    //        f=log(1+theta)-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
+    //        ll += f;
+    //    }
+    //}
     return ll;
 }
 
@@ -72,17 +62,12 @@ double DVineAD_LL(NumericVector u, NumericVector v, double theta) {
 //////////////////////////////////////////////////////////////
 // Function to compute h-function for vine simulation and estimation
 // Input:
-// family   copula family (0=independent,  1=gaussian, 2=student, 3=clayton, 4=gumbel, 5=frank, 6=joe, 7=BB1, 8=BB7)
-// n        number of iterations
-// u        variable for which h-function computes conditional distribution function
-// v        variable on which h-function conditions
-// theta    parameter for the copula family
-// nu       degrees-of-freedom for the students copula
+// n        Sample size 
+// u, v     Two arrays for samples in two dimensions    
+// theta    parameter for the bivariate copula
 // out      output
 //////////////////////////////////////////////////////////////
-//void Hfunc(int* family, int* n, double* u, double* v, double* theta, double* out)
 
-//NumericVector Hfunc(NumericVector u, NumericVector v, double theta)//, double* out)
 void Hfunc(int n, adouble* u, adouble* v, adouble theta, adouble* out)
 {
     int j;
@@ -90,22 +75,13 @@ void Hfunc(int n, adouble* u, adouble* v, adouble theta, adouble* out)
 
     for(j=0;j<n;j++)
     {
-            //if (theta<XEPS)
-            //{
-            //    out[j] = u[j];
-            //}
-            //else
-            //{
-            //    x = pow(u[j],-theta)+pow(v[j],-theta)-1.0 ;
-            //    out[j] = pow(v[j],-theta-1.0)*pow(x,-1.0-1.0/(theta));
-            //}
-
             x = pow(u[j],-theta)+pow(v[j],-theta)-1.0 ;
             x = pow(v[j],-theta-1.0)*pow(x,-1.0-1.0/(theta));
             condassign(out[j], theta-XEPS, x, u[j]);
     }
 }
 
+// Compute the negative log-likelihood, also used for automatic differentiation
 adouble computeLogLik(int n, int d, adouble*** H1, adouble*** H2, adouble** Theta, int TruncLevel)
 {
     adouble loglik(0);
