@@ -21,7 +21,7 @@ read ADOLC_LIB
 echo "$ADOLC_INC"
 echo "$ADOLC_LIB"
 echo -E "## CPPFLAGS"                       > ./DVineAD/src/Makevars
-echo -E "PKG_CXXFLAGS= -g -O2 \$(CPPFLAGS)" >> ./DVineAD/src/Makevars
+echo -E "PKG_CXXFLAGS= -g -O2 -std=c++11 \$(CPPFLAGS)" >> ./DVineAD/src/Makevars
 echo -E ""                                  >> ./DVineAD/src/Makevars
 echo -E "## User defined libs"              >> ./DVineAD/src/Makevars
 echo -E "PKG_LIBS= -L"$ADOLC_LIB "-ladolc -Wl,-rpath="$ADOLC_LIB >> ./DVineAD/src/Makevars

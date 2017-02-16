@@ -24,9 +24,13 @@ adouble LL(int n, adouble* u, adouble* v, adouble theta)
     {
         dat[0] = u[j]; dat[1] = v[j];
         //f=log1p(theta))-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
-        f+=log(1+theta)-(1.0+theta)*log(dat[0]*dat[1])-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
+        f+=log(1+theta)-(1.0+theta)*(log(dat[0])+log(dat[1]))-(2.0+1.0/(theta))*log(pow(dat[0],-theta)+pow(dat[1],-theta)-1.0);
     }
-    condassign(ff, theta-1e-10, f, 0);
+    // ADOL-C does not allow constant 0 in condassign in its newest verion.
+    // Question remains on accurate evaluation when theta is very small. Careful analysis is needed.
+    //condassign(ff, theta-1e-10, f, 0); 
+    ff = f;
+
     ll += ff;
 
     //if(theta <= 1e-10) ll = 0;
@@ -125,7 +129,7 @@ NumericVector DVineVec2RVineVec(int d, NumericVector dvinegrad, int TruncLevel)
 
     k=0;
     for (int j=(d-2); j>=0; j--) {
-        for (int i=max(0,j-TruncLevel+1); i<=j; i++) {
+        for (int i=std::max(0,j-TruncLevel+1); i<=j; i++) {
             rvinegrad[k] = mat[j-i][i];
             k++;
         }

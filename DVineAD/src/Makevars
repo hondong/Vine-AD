@@ -1,5 +1,5 @@
 ## CPPFLAGS
-PKG_CXXFLAGS= -g -O2 $(CPPFLAGS)
+PKG_CXXFLAGS= -g -O2 -std=c++11 $(CPPFLAGS)
 
 ## User defined libs
 PKG_LIBS= -L/home/hdong/lib -ladolc -Wl,-rpath=/home/hdong/lib
