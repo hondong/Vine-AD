@@ -1,5 +1,5 @@
 #!/bin/bash
-echo -e "\n\n"
+echo -e "\n"
 echo -e "This script will generate DVineAD/src/Makevars file that tells the compiler         " 
 echo -e "where is ADOL-C installed. It will then build and install the DVineAD package."  
 echo -e "If you see message \"R INSTALL successful!\", you will then be able to replicate "
@@ -7,12 +7,11 @@ echo -e "our numerical results reported in the paper with the following commands
 echo -e "    source(\"./DVineAD/tests/DVineADexample.R\")                              "  
 echo -e "    source(\"./DVineAD/tests/CompareTime.R\")                                 "  
 echo -e "Note the second script will take some time to finish.                         "
-echo -e "\n\n"
-
+echo -e "\n"
 read -n 1 -s -p "Press any key to continue"
-echo ""
+echo -e "\n"
 
-echo -e "If you do not have ADOL-C installed, please quite this script and so do. (https://projects.coin-or.org/ADOL-C) " 
+echo -e "If you do not yet have ADOL-C installed, please quite (by Ctrl-C) and install it. (https://projects.coin-or.org/ADOL-C) " 
 echo "Otherwise please input the path that contains a folder ./adolc/ (which then contains adolc.h), it may look like \"/home/hdong/adolc_base/include\" \n"
 read ADOLC_INC
 echo "Please input the path that contains file libadolc.so , it may look like \"/home/hdong/adolc_base/lib64\" \n"
